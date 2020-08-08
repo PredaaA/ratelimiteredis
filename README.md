@@ -1,4 +1,4 @@
-# ratelimiter-redis
+# ratelimiteredis
 
 An async ratelimiter using aioredis inspired from [redis-ratelimit project](https://github.com/romantomjak/redis-ratelimit).
 
