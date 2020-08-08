@@ -40,7 +40,7 @@ class RedisInterface(RedisPool):
         self._redis = None
         super().__init__(**kwargs)
 
-    async def _init_connection(self) -> None:
+    async def init_connection(self) -> None:
         try:
             self._redis = await aioredis.create_redis_pool(
                 address=f"redis://{self._host}:{self._port}",
@@ -53,7 +53,7 @@ class RedisInterface(RedisPool):
                 "Something went wrong while trying to connect to this Redis DB."
             )
 
-    async def _teardown(self) -> None:
+    async def teardown(self) -> None:
         if self._redis:
             self._redis.close()
 
@@ -68,3 +68,5 @@ class RedisInterface(RedisPool):
     @pool.setter
     async def pool(self, val) -> NoReturn:
         raise RuntimeError()
+
+redisinterface = RedisInterface()

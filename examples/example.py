@@ -4,7 +4,7 @@ from ratelimiteredis import RedisInterface, RateLimit
 
 async def get_interface():
     r = RedisInterface()
-    await r._init_connection()
+    await r.init_connection()
     return r
 
 
