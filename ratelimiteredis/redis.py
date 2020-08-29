@@ -16,20 +16,28 @@ class RedisPool:
         The Redis db.
     encoding: str = "utf-8"
         The encoding used.
+    maxsize: int = 50
+        The maximum of DBs of that pool.
     """
 
-    __slots__ = ("_host", "_port", "_db", "_encoding")
+    __slots__ = ("_host", "_port", "_db", "_encoding", "_maxsize")
 
     def __init__(
-        self, host: str = "localhost", port: int = 6379, db: int = 0, encoding: str = "utf-8"
+        self,
+        host: str = "localhost",
+        port: int = 6379,
+        db: int = 0,
+        encoding: str = "utf-8",
+        maxsize: int = 50,
     ):
         self._host = host
         self._port = port
         self._db = db
         self._encoding = encoding
+        self._maxsize = maxsize
 
     def __repr__(self):
-        return f"<RedisPool _host={self._host} _port={self._port} _db={self._db} _encoding={self._encoding}>"
+        return f"<RedisPool _host={self._host} _port={self._port} _db={self._db} _encoding={self._encoding} _maxsize={self._maxsize}>"
 
 
 class RedisInterface(RedisPool):
@@ -46,7 +54,7 @@ class RedisInterface(RedisPool):
                 address=f"redis://{self._host}:{self._port}",
                 db=self._db,
                 encoding=self._encoding,
-                maxsize=50,
+                maxsize=self._maxsize,
             )
         except Exception:
             raise RedisConnectionFail(

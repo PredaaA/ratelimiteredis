@@ -14,7 +14,12 @@ class Test:
         while True:
             try:
                 ratelimiter = RateLimit(interface)
-                ratelimit = await ratelimiter.get("60/m", "John", "Doe")
+                await ratelimiter.set(rate="60/m", key="John", value="Doe")
+                # You can choose by how many you want to increment by adding incrby.
+                # Example to increment by 50:
+                # await ratelimiter.set(rate="60/m", key="John", value="Doe", incrby=50)
+
+                ratelimit = await ratelimiter.get(rate="60/m", key="John", value="Doe")
                 print(ratelimit)
             except KeyboardInterrupt:
                 await interface.teardown()

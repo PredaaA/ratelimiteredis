@@ -1,13 +1,17 @@
 from .redis import RedisInterface
 from .utils import calc_ttl, parse_rate
 
+from typing import Optional
+
 
 class RateLimit:
     def __init__(self, redis: RedisInterface):
         self.redis = redis.pool
         self.encoding = redis._encoding
 
-    async def _handling(self, rate: str, key: str, value: str) -> dict:
+    async def _handling(
+        self, rate: str, key: str, value: str, incr: bool, incrby: int = 1
+    ) -> Optional[dict]:
         count, seconds = parse_rate(rate)
         redis_key = f"[{key}][{value}][{count}/{seconds}]"
 
@@ -24,9 +28,10 @@ class RateLimit:
                     },
                 }
 
-        value = await self.redis.incr(redis_key)
-        if value == 1:
-            await self.redis.expire(redis_key, seconds)
+        if incr:
+            value = await self.redis.incrby(redis_key, incrby)
+            if value == 1:
+                await self.redis.expire(redis_key, seconds)
 
         return {
             "ratelimited": False,
@@ -37,8 +42,8 @@ class RateLimit:
             },
         }
 
-    async def set(self, rate: str, key: str, value: str) -> None:
-        await self._handling(rate, key, value)
+    async def set(self, rate: str, key: str, value: str, incrby: int = 1) -> None:
+        await self._handling(rate, key, value, incr=True, incrby=incrby)
 
     async def get(self, rate: str, key: str, value: str) -> dict:
-        return await self._handling(rate, key, value)
+        return await self._handling(rate, key, value, incr=False)
