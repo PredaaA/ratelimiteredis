@@ -47,3 +47,11 @@ class RateLimit:
 
     async def get(self, rate: str, key: str, value: str) -> dict:
         return await self._handling(rate, key, value, incr=False)
+
+    async def set_and_get(self, rate: str, key: str, value: str, incrby: int = 1) -> dict:
+        return await self._handling(rate, key, value, incr=True, incrby=incrby)
+
+    async def delete(self, rate: str, key: str, value: str) -> None:
+        count, seconds = parse_rate(rate)
+        redis_key = f"[{key}][{value}][{count}/{seconds}]"
+        await self.redis.delete(redis_key)
