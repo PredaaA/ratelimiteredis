@@ -34,7 +34,7 @@ class RedisPool:
 
 class RedisInterface(RedisPool):
 
-    __slots__ = "_redis"
+    __slots__ = ("_redis",)
 
     def __init__(self, **kwargs):
         self._redis = None
@@ -68,5 +68,6 @@ class RedisInterface(RedisPool):
     @pool.setter
     async def pool(self, val) -> NoReturn:
         raise RuntimeError()
+
 
 redisinterface = RedisInterface()

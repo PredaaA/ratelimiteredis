@@ -17,7 +17,7 @@ class Test:
                 ratelimit = await ratelimiter.get("60/m", "John", "Doe")
                 print(ratelimit)
             except KeyboardInterrupt:
-                await interface._teardown()
+                await interface.teardown()
                 break
             else:
                 await asyncio.sleep(1)
