@@ -123,3 +123,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# User-specific stuff:
+.idea/
+*.iws
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+test.py
